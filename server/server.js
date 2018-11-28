@@ -13,6 +13,23 @@ const port = process.env.PORT || 3000;
 const app = express();
 app.use(bodyParser.json());
 
+//POST Users
+app.post('/users',(req,res)=>{
+    console.log("inside POST /users");
+    var body = _.pick(req.body,['email','password']);
+    var user = new User(body);
+                                
+    user.save().then(()=>{
+        //res.send(doc);
+        return user.generateAuthToken();
+    }).then((token)=>{
+        res.header('x-auth',token).send(user);
+    }).catch((e)=>{
+        res.status(400).send(e);
+    });
+                                
+});
+
 //POST Todos
 app.post('/todos',(req,res)=>{
     //console.log(req.body);
