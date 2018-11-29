@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const {ObjectID} = require('mongodb');
 const _ = require('lodash');
-
+const {authenticate} = require('./middleware/authenticate.js');
 
 const {mongoose} = require("./db/mongoose.js");
 const {Todo} = require("./models/todo.js");
@@ -12,6 +12,12 @@ const port = process.env.PORT || 3000;
 
 const app = express();
 app.use(bodyParser.json());
+
+
+//GET users/me
+app.get('/users/me',authenticate, (req,res)=>{
+    res.send(req.user);
+});
 
 //POST Users
 app.post('/users',(req,res)=>{
