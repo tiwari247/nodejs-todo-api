@@ -21,6 +21,20 @@ app.get('/users/me',authenticate, (req,res)=>{
     res.send(req.user);
 });
 
+//POST /users/login
+app.post('/users/login',(req, res)=>{
+    var body = _.pick(req.body,['email','password']);
+    User.findByCredentials(body.email, body.password).then((user)=>{
+        user.generateAuthToken().then((token)=>{
+            res.header('x-auth',token).send(user);    
+        });
+        
+    }).catch((e)=>{
+        res.status(404).send();
+    });
+//    res.send(body);
+});
+
 //POST Users
 app.post('/users',(req,res)=>{
     console.log("inside POST /users");
