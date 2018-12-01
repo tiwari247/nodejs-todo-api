@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const {ObjectID} = require('mongodb');
 const _ = require('lodash');
 const {authenticate} = require('./middleware/authenticate.js');
+const jwt = require('jsonwebtoken');
+
 
 const {mongoose} = require("./db/mongoose.js");
 const {Todo} = require("./models/todo.js");
@@ -30,6 +32,7 @@ app.post('/users',(req,res)=>{
         return user.generateAuthToken();
     }).then((token)=>{
         res.header('x-auth',token).send(user);
+        console.log('saved');
     }).catch((e)=>{
         res.status(400).send(e);
     });
